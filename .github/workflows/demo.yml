@@ -25,16 +25,18 @@ jobs:
 
             // Ensure the pull request was merged into the specified base branch
             if (github.context.payload.pull_request.merged && github.context.payload.pull_request.base.ref === base) {
-              const response = await github.pulls.create({
+              github.pulls.create({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 title,
                 body,
                 head,
                 base,
+              }).then(response => {
+                console.log(`Pull Request created: ${response.data.html_url}`);
+              }).catch(error => {
+                console.error(`Error creating Pull Request: ${error}`);
               });
-
-              console.log(`Pull Request created: ${response.data.html_url}`);
             } else {
               console.log("No action needed. Pull request was not merged into the specified base branch.");
             }
