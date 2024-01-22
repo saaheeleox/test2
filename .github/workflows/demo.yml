@@ -24,7 +24,7 @@ jobs:
             const base = "dev_foley_form"; # Change this to the branch you want to create a pull request from
 
             // Ensure the pull request was merged into the specified base branch
-            if (github.event.pull_request.merged && github.event.pull_request.base.ref === base) {
+            if (github.context.payload.pull_request.merged && github.context.payload.pull_request.base.ref === base) {
               const response = await github.pulls.create({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
