@@ -14,31 +14,19 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Create Pull Request
-        uses: actions/github-script@v7
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const title = "Automatic Pull Request";
-            const body = "This is an automatic pull request created by GitHub Actions.";
-            const head = "hub-test";
-            const base = "dev_foley_form"; # Change this to the branch you want to create a pull request from
+        run: |
+          title="Automatic Pull Request"
+          body="This is an automatic pull request created by GitHub Actions."
+          head="hub-test"
+          base="dev_foley_form" # Change this to the branch you want to create a pull request from
 
-            // Ensure the pull request was merged into the specified base branch
-            if (github.context.payload.pull_request.merged && github.context.payload.pull_request.base.ref === base) {
-              github.pulls.create({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                title,
-                body,
-                head,
-                base,
-              }, function (error, response) {
-                if (error) {
-                  console.error(`Error creating Pull Request: ${error}`);
-                } else {
-                  console.log(`Pull Request created: ${response.data.html_url}`);
-                }
-              });
-            } else {
-              console.log("No action needed. Pull request was not merged into the specified base branch.");
-            }
+          # Ensure the pull request was merged into the specified base branch
+          if [ "${{ github.event_name }}" = "pull_request" ] && [ "${{ github.event.action }}" = "closed" ] && [ "${{ github.event.pull_request.base.ref }}" = "$base" ]; then
+            curl -X POST \
+              -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+              -H "Content-Type: application/json" \
+              -d "{\"title\":\"$title\",\"body\":\"$body\",\"head\":\"$head\",\"base\":\"$base\"}" \
+              "https://api.github.com/repos/${{ github.repository }}/pulls"
+          else
+            echo "No action needed. Pull request was not merged into the specified base branch."
+          fi
