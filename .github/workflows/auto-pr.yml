@@ -1,22 +1,19 @@
-name: Automatic Pull Request
-
-on:
-  pull_request:
-    types:
-      - closed
-
+name: Pull Request on Branch Push
+on: [release]
 jobs:
-  create-pr:
+  pull-request-on-release:
+    name: PullRequestAction
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v6.0.0
-        id: cpr
-      - name: Check outputs
-        if: ${{ steps.cpr.outputs.pull-request-number }}
+      - name: Checkout Code
+        uses: actions/checkout@v2
+      - name: Derive from branch name
         run: |
-          echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-number }}"
-          echo "Pull Request URL - ${{ steps.cpr.outputs.pull-request-url }}"
+            # do custom parsing of your code / date to derive a branch from
+            PR_BRANCH_FROM=dev_wf_22
+            echo "PULL_REQUEST_FROM_BRANCH=${PR_BRANCH_FROM}" >> $GITHUB_ENV
+      - name: pull-request-action
+        uses: vsoch/pull-request-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PULL_REQUEST_BRANCH: "main"
