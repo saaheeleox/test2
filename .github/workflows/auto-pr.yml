@@ -12,6 +12,17 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
+      - name: Debug Info
+        run: |
+          echo "GitHub Event:"
+          echo "${{ toJson(github.event) }}"
+          echo "Current Branch:"
+          git branch
+          echo "Git Log:"
+          git log --oneline -n 5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
       - name: Create PR on Merge
         run: |
           if [ "${{ github.event.pull_request.merged }}" == "true" ]; then
