@@ -1,0 +1,35 @@
+name: Run Workflow on Test Branch After Merge
+
+on:
+  pull_request:
+    types:
+      - closed
+
+jobs:
+  run-on-test:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' && github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'dev_feature_1'
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+        with:
+          ref: test
+
+      - name: Debug Info
+        run: |
+          echo "GitHub Event:"
+          echo "${{ toJson(github.event) }}"
+          echo "Current Branch:"
+          git branch
+          echo "token-${{ secrets.GH_TOKEN }}"
+          echo "secrets-${{ toJson(secrets) }}"
+          echo "Git Log:"
+          git log --oneline -n 5
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+
+      - name: Your Workflow Steps
+        run: |
+          gh pr create --base test --head dev_feature_1 --title "Automatically created pull request" --body "data"
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
