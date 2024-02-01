@@ -18,7 +18,8 @@ jobs:
           echo "${{ toJson(github.event) }}"
           echo "Current Branch:"
           git branch
-          echo "token${{ secrets.GITHUB_TOKEN }}"
+          echo "token-${{ secrets.GH_TOKEN }}"
+          echo "secrets-${{ toJson(secrets) }}"
           echo "Git Log:"
           git log --oneline -n 5
         env:
