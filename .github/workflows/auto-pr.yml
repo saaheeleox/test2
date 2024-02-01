@@ -1,16 +1,19 @@
-name: Create PR on Merge
+name: Run Workflow on Test Branch After Merge
 
 on:
   pull_request:
-    branches: [dev_feature_1]
-    types: [closed]
+    types:
+      - closed
 
 jobs:
-  create-pr:
+  run-on-test:
     runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' && github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'dev_feature_1'
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
+        with:
+          ref: test
 
       - name: Debug Info
         run: |
@@ -24,8 +27,8 @@ jobs:
           git log --oneline -n 5
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
-      
-      - name: Create PR on Merge
+
+      - name: Your Workflow Steps
         run: |
           gh pr create --base test --head dev_feature_1 --title "Automatically created pull request" --body "data"
         env:
