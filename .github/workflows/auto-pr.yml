@@ -23,10 +23,10 @@ jobs:
           echo "Git Log:"
           git log --oneline -n 5
         env:
-          GH_TOKEN:  ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN:  ${{ secrets.GH_TOKEN }}
       
       - name: Create PR on Merge
         run: |
             gh pr create --base main --head dev_wf_22 --title "Automatically created pull request" --body "data"
         env:
-          GH_TOKEN:  ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN:  ${{ secrets.GH_TOKEN }}
