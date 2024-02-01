@@ -15,10 +15,6 @@ jobs:
       - name: Create PR on Merge
         run: |
           if [ "${{ github.event.pull_request.merged }}" == "true" ]; then
-            # Add your script or command to create a new pull request here
-            # Example:
-            # git checkout -b new-feature-branch
-            # git push origin new-feature-branch
             gh pr create --base main --head dev_wf_22 --title "Automatically created pull request"
           fi
         env:
