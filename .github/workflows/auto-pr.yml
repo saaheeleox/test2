@@ -2,8 +2,7 @@ name: Create PR on Merge
 
 on:
   pull_request:
-    types:
-      - closed
+    branches: [dev_feature_1]
 
 jobs:
   create-pr:
