@@ -27,6 +27,6 @@ jobs:
       
       - name: Create PR on Merge
         run: |
-            gh pr create --base main --head dev_wf_22 --title "Automatically created pull request" --body "data"
+            gh pr create --base test --head dev_feature_1 --title "Automatically created pull request" --body "data"
         env:
           GH_TOKEN:  ${{ secrets.GH_TOKEN }}
