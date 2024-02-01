@@ -3,6 +3,7 @@ name: Create PR on Merge
 on:
   pull_request:
     branches: [dev_feature_1]
+    types: [closed]
 
 jobs:
   create-pr:
@@ -22,10 +23,10 @@ jobs:
           echo "Git Log:"
           git log --oneline -n 5
         env:
-          GH_TOKEN:  ${{ secrets.GH_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
       
       - name: Create PR on Merge
         run: |
-            gh pr create --base test --head dev_feature_1 --title "Automatically created pull request" --body "data"
+          gh pr create --base test --head dev_feature_1 --title "Automatically created pull request" --body "data"
         env:
-          GH_TOKEN:  ${{ secrets.GH_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
